@@ -1,0 +1,39 @@
+name: Build & test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  plebian:
+    name: Plebian Clang
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: install deps
+      run: sudo apt-get install -y clang libc++-dev
+    - name: clang version
+      run: clang --version
+    - name: build & test
+      run: |
+        echo '## Plebian Clang'            >> $GITHUB_STEP_SUMMARY
+        echo '```'                         >> $GITHUB_STEP_SUMMARY
+        ./test                  2>&1 | tee -a $GITHUB_STEP_SUMMARY
+        echo '```'                         >> $GITHUB_STEP_SUMMARY
+  apple:
+    name: Apple Clang
+    runs-on: macos-12
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: clang version
+      run: clang --version
+    - name: build & test
+      run: |
+        echo '## Apple Clang'            >> $GITHUB_STEP_SUMMARY
+        echo '```'                         >> $GITHUB_STEP_SUMMARY
+        ./test                  2>&1 | tee -a $GITHUB_STEP_SUMMARY
+        echo '```'                         >> $GITHUB_STEP_SUMMARY
